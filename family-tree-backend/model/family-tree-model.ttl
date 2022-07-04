@@ -1,0 +1,35 @@
+@prefix ft: <urn:family-tree:model#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+ft:Person a rdfs:Class ;
+    rdfs:label "Person" .
+
+ft:child a rdf:Property ;
+    rdfs:label "child" .
+
+ft:parent a rdf:Property ;
+    rdfs:label "parent" .
+
+ft:partner a rdf:Property ;
+    rdfs:label "partner" .
+
+ft:sibling a rdf:Property ;
+    rdfs:label "sibling" .
+
+ft:firstName a rdf:Property ;
+    rdfs:label "firstName" .
+
+ft:middleName a rdf:Property ;
+    rdfs:label "middleName" .
+
+ft:lastName a rdf:Property ;
+    rdfs:label "lastName" .
+
+ft:birthday a rdf:Property ;
+    rdfs:label "birthday" .
+
+ft:sex a rdf:Property ;
+    rdfs:label "sex" .
