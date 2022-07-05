@@ -3,11 +3,11 @@ import rdflib
 SOURCE_PATH = "family_tree_data"
 
 
-def load_turtle(ft_name: str) -> rdflib.Graph:
+def load_family_tree(ft_name: str) -> rdflib.Graph:
     graph = rdflib.Graph()
-    graph.parse(f"{SOURCE_PATH}/{ft_name}")
+    graph.parse(f"{SOURCE_PATH}/{ft_name}.ttl")
     return graph
 
 
-def update_bidirectional_edges(graph: rdflib.Graph):
-    pass
+def store_family_tree(graph: rdflib.Graph, ft_name: str):
+    graph.serialize(destination=f"{SOURCE_PATH}/{ft_name}.ttl", encoding="utf8")

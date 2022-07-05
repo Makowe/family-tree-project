@@ -22,9 +22,6 @@ ft:sibling a rdf:Property ;
 ft:firstName a rdf:Property ;
     rdfs:label "firstName" .
 
-ft:middleName a rdf:Property ;
-    rdfs:label "middleName" .
-
 ft:lastName a rdf:Property ;
     rdfs:label "lastName" .
 
