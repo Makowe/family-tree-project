@@ -1,0 +1,2 @@
+class InvalidFamilyTreeError(Exception):
+    pass
