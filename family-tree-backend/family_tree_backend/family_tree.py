@@ -64,6 +64,7 @@ class FamilyTree:
         if birthday is not None:
             birthday = datetime.date.fromisoformat(birthday)
         sex = self._graph.value(subject=node, predicate=vocab.FT.sex.uri)
+        sex = self._graph.value(subject=node, predicate=vocab.FT.sex.uri)
 
         person = Person(node, first_name, last_name, birthday, sex)
         self._persons[node] = person

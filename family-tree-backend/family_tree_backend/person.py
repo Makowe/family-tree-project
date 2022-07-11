@@ -12,6 +12,19 @@ class Sex(Enum):
     FEMALE = "F"
     DIVERSE = "D"
 
+    @staticmethod
+    def from_string(value: str) -> Optional['Sex']:
+        if not isinstance(value, str):
+            return None
+        if value.lower() == "male" or value.lower() == "m":
+            return Sex.MALE
+        if value.lower() == "female" or value.lower() == "f":
+            return Sex.FEMALE
+        if value.lower() == "diverse" or value.lower() == "d":
+            return Sex.DIVERSE
+        else:
+            return None
+
 
 class Person:
     def __init__(self, urn: rdflib.URIRef,
@@ -52,10 +65,6 @@ class Person:
     @property
     def sex(self) -> Optional[Sex]:
         return self._sex
-
-    @property
-    def parents(self) -> List['Person']:
-        return self._parents
 
     @property
     def parents(self) -> List['Person']:
