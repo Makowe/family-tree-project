@@ -11,11 +11,12 @@ from family_tree_backend.person import Person
 
 class FamilyTree:
 
-    def __init__(self, ft_name: str):
+    def __init__(self, ft_name: Optional[str] = None):
         self._persons: Dict[rdflib.URIRef, Person] = {}
-        self._graph = family_tree_backend.rdf_interface.load_graph(ft_name)
 
-        self._import_ft(ft_name)
+        if ft_name:
+            self._graph = family_tree_backend.rdf_interface.load_graph(ft_name)
+            self._import_ft()
         self._last_update: int = hash(self)
 
         self._auto_complete()
@@ -46,7 +47,7 @@ class FamilyTree:
     def _graph_is_up_to_date(self) -> bool:
         return hash(self) == self._last_update
 
-    def _import_ft(self, ft_name: str):
+    def _import_ft(self):
 
         person_nodes = rdf_interface.get_nodes_of_type(self._graph, vocab.FT.person)
         for node in person_nodes:

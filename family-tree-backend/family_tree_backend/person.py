@@ -28,10 +28,10 @@ class Sex(Enum):
 
 class Person:
     def __init__(self, urn: rdflib.URIRef,
-                 first_name: Optional[str],
-                 last_name: Optional[str],
-                 birthday: Optional[datetime.date],
-                 sex: Optional[Sex]):
+                 first_name: Optional[str] = None,
+                 last_name: Optional[str] = None,
+                 birthday: Optional[datetime.date] = None,
+                 sex: Optional[Sex] = None):
         self._urn = urn
         self._first_name = first_name
         self._last_name = last_name
@@ -83,9 +83,9 @@ class Person:
             self._children.append(child)
 
     def add_relative(self, relative: 'Person', relation: vocab.Vocab):
-        if relation == "child":
+        if relation == vocab.FT.child:
             self.add_child(relative)
-        elif relation == "parent":
+        elif relation == vocab.FT.parent:
             self.add_parent(relative)
         else:
             raise ValueError(f"unknown relation {str(relation)}")
