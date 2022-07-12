@@ -1,5 +1,5 @@
 import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import rdflib
 
@@ -29,6 +29,14 @@ class FamilyTree:
     @property
     def persons(self) -> List[Person]:
         return list(self._persons.values())
+
+    def add_person(self, person: Person) -> None:
+        if person.urn not in self._persons.keys():
+            self._persons[person.urn] = person
+
+    def remove_person(self, person: Person) -> None:
+        if person.urn in self._persons.keys():
+            self._persons.pop(person.urn)
 
     @property
     def graph(self, ) -> rdflib.Graph:
