@@ -1,0 +1,25 @@
+@prefix ft: <urn:family-tree:model#> .
+@prefix : <urn:family-tree:test1#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:p1 a ft:Person ;
+    ft:firstName "Alice" ;
+    ft:lastName "Smith" ;
+    ft:birthday "1980-01-01" ;
+    ft:parent :p2 ;
+    ft:sex "female" .
+
+:p2 a ft:Person ;
+    ft:firstName "Bob" ;
+    ft:lastName "Miller" ;
+    ft:birthday "1955-01-31" ;
+    ft:child :p1 ;
+    ft:parent :p3 ;
+    ft:sex "male" .
+
+:p3 a ft:Person ;
+    ft:firstName "Clementine" ;
+    ft:lastName "Sucker" ;
+    ft:birthday "1932-01-01" ;
+    ft:child :p2 ;
+    ft:sex "diverse" .
