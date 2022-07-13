@@ -6,7 +6,7 @@ import rdflib
 import family_tree_backend.rdf_interface
 from family_tree_backend import rdf_interface, vocab
 from family_tree_backend.exceptions import InvalidFamilyTreeError
-from family_tree_backend.person import Person
+from family_tree_backend.person import Person, Sex
 
 
 class FamilyTree:
@@ -16,8 +16,14 @@ class FamilyTree:
 
         if ft_name:
             self._graph = family_tree_backend.rdf_interface.load_graph(ft_name)
-            self._import_ft()
+            self.import_ft()
+        else:
+            self._graph = rdflib.Graph()
         self._last_update: int = hash(self)
+        """ Stores the hash of the last state when RDF Graph and Family Tree described the
+        same information. This field is used as an indicator whether RDF Graph and List of Persons
+        are aligned.  
+        """
 
         self._auto_complete()
 
@@ -46,6 +52,7 @@ class FamilyTree:
             return self._update_graph()
 
     def _update_graph(self) -> rdflib.Graph:
+        """ Regenerates the RDF graph so it is aligned with the List of Persons """
         self._graph = rdflib.Graph()
         for person in self._persons.values():
             [self._graph.add(triple) for triple in person.triples]
@@ -53,9 +60,12 @@ class FamilyTree:
         return self._graph
 
     def _graph_is_up_to_date(self) -> bool:
+        """ Checks if the information in the RDF Graph and the List of Persons is aligned. """
         return hash(self) == self._last_update
 
-    def _import_ft(self):
+    def import_ft(self, ft_name: Optional[str] = None):
+        if ft_name is not None:
+            self._graph = family_tree_backend.rdf_interface.load_graph(ft_name)
 
         person_nodes = rdf_interface.get_nodes_of_type(self._graph, vocab.FT.person)
         for node in person_nodes:
@@ -68,12 +78,20 @@ class FamilyTree:
             return self._persons[node]
 
         first_name = self._graph.value(subject=node, predicate=vocab.FT.first_name.uri)
+        if first_name is not None:
+            first_name = str(first_name)
+
         last_name = self._graph.value(subject=node, predicate=vocab.FT.last_name.uri)
+        if last_name is not None:
+            last_name = str(last_name)
+
         birthday = self._graph.value(subject=node, predicate=vocab.FT.birthday.uri)
         if birthday is not None:
             birthday = datetime.date.fromisoformat(birthday)
+
         sex = self._graph.value(subject=node, predicate=vocab.FT.sex.uri)
-        sex = self._graph.value(subject=node, predicate=vocab.FT.sex.uri)
+        if sex is not None:
+            sex = Sex.from_string(sex)
 
         person = Person(node, first_name, last_name, birthday, sex)
         self._persons[node] = person

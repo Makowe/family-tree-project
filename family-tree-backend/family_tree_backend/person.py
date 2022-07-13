@@ -13,9 +13,8 @@ class Sex(Enum):
     DIVERSE = "D"
 
     @staticmethod
-    def from_string(value: str) -> Optional['Sex']:
-        if not isinstance(value, str):
-            return None
+    def from_string(value) -> Optional['Sex']:
+        value = str(value)
         if value.lower() == "male" or value.lower() == "m":
             return Sex.MALE
         if value.lower() == "female" or value.lower() == "f":
