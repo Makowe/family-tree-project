@@ -2,7 +2,7 @@ from typing import List
 
 import rdflib
 
-from family_tree_backend import vocab
+from family_tree_backend.model import vocab
 
 
 def get_nodes_of_type(graph, node_type: vocab.Vocab) -> List[rdflib.URIRef]:
