@@ -3,8 +3,9 @@ import datetime
 import pytest
 import rdflib
 
-from family_tree_backend import vocab
-from family_tree_backend.person import Person, Sex
+from family_tree_backend.model import vocab
+from family_tree_backend.model.person import Sex, Person
+
 
 def test_loading_sex():
     assert Sex.from_string("M") == Sex.MALE
@@ -28,11 +29,11 @@ def test_getters():
     assert person.sex == Sex.FEMALE
 
     assert person.triples == [
-        (urn, rdflib.URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), rdflib.URIRef('urn:family-tree:model#Person')),
-        (urn, rdflib.URIRef('urn:family-tree:model#firstName'), rdflib.Literal('Alice')),
-        (urn, rdflib.URIRef('urn:family-tree:model#lastName'), rdflib.Literal('Smith')),
-        (urn, rdflib.URIRef('urn:family-tree:model#birthday'), rdflib.Literal('1980-01-01', datatype=rdflib.URIRef('http://www.w3.org/2001/XMLSchema#date'))),
-        (urn, rdflib.URIRef('urn:family-tree:model#sex'), rdflib.Literal('Sex.FEMALE'))]
+        (urn, vocab.RDF.type.uri, vocab.FT.person.uri),
+        (urn, vocab.FT.first_name.uri, rdflib.Literal('Alice')),
+        (urn, vocab.FT.last_name.uri, rdflib.Literal('Smith')),
+        (urn, vocab.FT.birthday.uri, rdflib.Literal('1980-01-01', datatype=rdflib.URIRef('http://www.w3.org/2001/XMLSchema#date'))),
+        (urn, vocab.FT.sex.uri, rdflib.Literal('F'))]
 
 def test_getters_empty_data():
     urn = rdflib.URIRef("urn:test:aliceSmith")

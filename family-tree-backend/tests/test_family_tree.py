@@ -1,6 +1,6 @@
 import rdflib
 
-from family_tree_backend.family_tree import FamilyTree
+from family_tree_backend.model.family_tree import FamilyTree
 
 
 def test_empty_family_tree():
