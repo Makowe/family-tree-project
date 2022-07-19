@@ -3,10 +3,11 @@ from typing import Dict, List, Optional
 
 import rdflib
 
-import family_tree_backend.rdf_interface
-from family_tree_backend import rdf_interface, vocab
-from family_tree_backend.exceptions import InvalidFamilyTreeError
-from family_tree_backend.person import Person, Sex
+import family_tree_backend.util.rdf_interface
+from family_tree_backend.util import rdf_interface
+from family_tree_backend.model import vocab
+from family_tree_backend.util.exceptions import InvalidFamilyTreeError
+from family_tree_backend.model.person import Person, Sex
 
 
 class FamilyTree:
@@ -14,16 +15,17 @@ class FamilyTree:
     def __init__(self, ft_name: Optional[str] = None):
         self._persons: Dict[rdflib.URIRef, Person] = {}
 
-        if ft_name:
-            self._graph = family_tree_backend.rdf_interface.load_graph(ft_name)
-            self.import_ft()
-        else:
-            self._graph = rdflib.Graph()
-        self._last_update: int = hash(self)
+        self._last_update: int = 0
         """ Stores the hash of the last state when RDF Graph and Family Tree described the
         same information. This field is used as an indicator whether RDF Graph and List of Persons
         are aligned.  
         """
+
+        if ft_name:
+            self._graph = family_tree_backend.util.rdf_interface.load_graph(ft_name)
+            self.import_ft()
+        else:
+            self._graph = rdflib.Graph()
 
         self._auto_complete()
 
@@ -56,22 +58,28 @@ class FamilyTree:
         self._graph = rdflib.Graph()
         for person in self._persons.values():
             [self._graph.add(triple) for triple in person.triples]
-        self._last_update = hash(self)
+        self._set_as_up_to_date()
         return self._graph
 
     def _graph_is_up_to_date(self) -> bool:
         """ Checks if the information in the RDF Graph and the List of Persons is aligned. """
         return hash(self) == self._last_update
 
+    def _set_as_up_to_date(self):
+        self._last_update: int = hash(self)
+
     def import_ft(self, ft_name: Optional[str] = None):
         if ft_name is not None:
-            self._graph = family_tree_backend.rdf_interface.load_graph(ft_name)
+            self._persons = {}
+            self._graph = family_tree_backend.util.rdf_interface.load_graph(ft_name)
 
         person_nodes = rdf_interface.get_nodes_of_type(self._graph, vocab.FT.person)
         for node in person_nodes:
             person = self._create_person(node)
             self._add_relatives(person, vocab.FT.child)
             self._add_relatives(person, vocab.FT.parent)
+        self._set_as_up_to_date()
+        self._auto_complete()
 
     def _create_person(self, node: rdflib.URIRef) -> Person:
         if node in self._persons.keys():

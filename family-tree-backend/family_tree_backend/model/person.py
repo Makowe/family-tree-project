@@ -4,7 +4,7 @@ from typing import List, Optional, Tuple
 
 import rdflib
 
-from family_tree_backend import vocab
+from family_tree_backend.model import vocab
 
 
 class Sex(Enum):
@@ -23,6 +23,9 @@ class Sex(Enum):
             return Sex.DIVERSE
         else:
             return None
+
+    def __str__(self):
+        return self.value
 
 
 class Person:
@@ -44,6 +47,9 @@ class Person:
             self._urn, self._first_name, self._last_name, self._birthday, self._sex,
             tuple([c.urn for c in self._children]), tuple([p.urn for p in self._parents])
         ))
+
+    def __str__(self):
+        return str(self._urn)
 
     @property
     def urn(self) -> rdflib.URIRef:
